@@ -1,0 +1,11 @@
+# Build output. `dotnet build` recreates it.
+bin/
+obj/
+
+# Editor and OS files
+.vs/
+.idea/
+*.user
+*.suo
+Thumbs.db
+.DS_Store

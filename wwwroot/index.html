@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CodeGraph</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header id="topbar">
+    <div class="brand">Code<span>Graph</span></div>
+    <form id="analyze-form">
+      <input id="path" type="text" spellcheck="false" autocomplete="off"
+             placeholder="Folder or .sln path, e.g. C:\src\MyApp or /home/me/src/MyApp/MyApp.sln">
+      <label class="check" title="Skip projects that look like test projects">
+        <input id="exclude-tests" type="checkbox" checked> Ignore test projects
+      </label>
+      <button id="analyze" type="submit" class="primary">Analyze</button>
+      <button id="reanalyze" type="button" disabled title="Discard the cached result and analyze again">Re-analyze</button>
+    </form>
+    <div id="search-box">
+      <input id="search" type="search" placeholder="Search nodes…" autocomplete="off" disabled>
+      <ul id="search-results" hidden></ul>
+    </div>
+  </header>
+
+  <main>
+    <aside id="left">
+      <details id="legend" open>
+        <summary>How to read this graph</summary>
+        <ul class="legend-shapes">
+          <li><span class="glyph square"></span>project</li>
+          <li><span class="glyph diamond"></span>namespace</li>
+          <li><span class="glyph circle"></span>class, record, struct, enum</li>
+          <li><span class="glyph ring"></span>interface</li>
+          <li><span class="glyph dot"></span>method</li>
+        </ul>
+        <p><b>Colour</b> is the community: code that is closely connected. Each has a shaded area and a name.</p>
+        <p><b>Size</b> is the number of connections.</p>
+        <p><b>Lines</b> are relationships, coloured as in the list below.</p>
+        <p>Hover a node to preview its connections, click to keep them, Esc to clear. Scroll to zoom, drag to move.</p>
+      </details>
+      <section>
+        <h2>Node kinds</h2>
+        <p class="hint">Untick a kind to hide it.</p>
+        <div id="large-note" class="note" hidden></div>
+        <div id="kind-filters" class="filter-list"></div>
+      </section>
+      <section>
+        <h2>Relationships</h2>
+        <p class="hint">Which lines to draw. Hover a name for its meaning.</p>
+        <div id="edge-filters" class="filter-list"></div>
+      </section>
+      <section>
+        <h2>Minimum connections <span id="min-degree-value" class="pill">0</span></h2>
+        <p class="hint">Hide nodes with fewer connections than this.</p>
+        <input id="min-degree" type="range" min="0" max="20" value="0" step="1">
+      </section>
+      <section id="warnings-section" hidden>
+        <h2>Warnings <span id="warnings-count" class="pill warn">0</span></h2>
+        <ul id="warnings"></ul>
+      </section>
+    </aside>
+
+    <div id="stage">
+      <canvas id="graph"></canvas>
+      <div id="empty" class="center-message">
+        <h1>Map a C# solution</h1>
+        <p>Enter a folder or <code>.sln</code> path above and press <b>Analyze</b>.</p>
+        <p class="dim">The code is only read. Nothing is built, changed or run.</p>
+      </div>
+      <div id="loading" class="center-message" hidden>
+        <div class="spinner"></div>
+        <p id="loading-text">Analyzing…</p>
+      </div>
+      <div id="error" class="center-message" hidden></div>
+      <div id="status"></div>
+      <div id="view-buttons">
+        <button id="fit" type="button" title="Fit the graph to the window">Fit</button>
+        <button id="relayout" type="button" title="Run the layout again">Re-layout</button>
+      </div>
+      <div id="tooltip" hidden></div>
+    </div>
+
+    <aside id="right">
+      <section id="communities-section">
+        <h2>Communities <span id="community-count" class="pill">0</span></h2>
+        <p class="hint">Groups of closely connected code, each named after its most connected member. Point at one to spotlight it.</p>
+        <label class="check select-all"><input id="select-all" type="checkbox" checked> Select All</label>
+        <ul id="communities"></ul>
+      </section>
+      <section id="details-section">
+        <h2>Details</h2>
+        <div id="details"><p class="dim">Hover a node to preview its connections. Click it to keep them highlighted and list them here.</p></div>
+      </section>
+    </aside>
+  </main>
+
+  <!-- D3 7.9.0 is bundled in lib/, so the page makes no requests outside localhost. -->
+  <script src="lib/d3.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

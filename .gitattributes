@@ -1,0 +1,8 @@
+# Text files are stored with LF in the repository; each machine checks out its own line endings.
+* text=auto
+
+# Vendored files must stay exactly as downloaded: the NuGet packages (zip archives), D3 (its
+# SHA-512 is checked against the one cdnjs publishes) and the transfer zip.
+*.nupkg binary
+*.zip binary
+wwwroot/lib/d3.min.js binary
